@@ -1,0 +1,49 @@
+<html>
+
+<body>
+
+
+  <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyBev5tGZNk2mcJRIL7VXocyF6_hAzTZrjc",
+      authDomain: "intense-torch-3840.firebaseapp.com",
+      databaseURL: "https://intense-torch-3840.firebaseio.com",
+      storageBucket: "intense-torch-3840.appspot.com",
+    };
+    firebase.initializeApp(config);
+    console.log("firebase app initialized, ready for button presses");
+
+    function doAuth () {
+      firebase.auth().signInWithEmailAndPassword("sannietest@skwakman.nl", "test123").then(
+      function (result) {
+        console.log("login successful!", result)
+        return result;
+      }).then( function () {
+          firebase.database().ref("/thing/subthingAnonymous").on("value", function (snapshot) {
+            console.log("anonymous-protected data received: ", snapshot.val());
+
+          }, function (error) {
+            console.log("anonymous-protected data error occured: ", error)
+          });
+
+          firebase.database().ref("/thing/subthingPassword").on("value", function (snapshot) {
+            console.log("password-protected data received: ", snapshot.val());
+
+          }, function (error) {
+            console.log("password-protected data error occured: ", error)
+          });
+
+      }).catch( function (e) {
+        console.log("signin error occured:" , e);
+      });
+    }
+  </script>
+
+  <button onClick="doAuth();">get data</button><br/>
+  Results are logged in console. Retrying requires browser refresh.
+
+</body>
+
+</html>
